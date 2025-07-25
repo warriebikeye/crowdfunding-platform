@@ -68,18 +68,28 @@ export const StateContextProvider = ({ children }) => {
   };
 
   const getCampaigns = async () => {
-    const campaigns = await contract.getCampaigns();
-    return campaigns.map((campaign, i) => ({
-      owner: campaign.owner,
-      title: campaign.title,
-      description: campaign.description,
-      target: ethers.utils.formatEther(campaign.target.toString()),
-      deadline: campaign.deadline.toNumber(),
-      amountCollected: ethers.utils.formatEther(campaign.amountCollected.toString()),
-      image: campaign.image,
-      pId: i,
-    }));
+    try {
+      const response = await fetch('http://localhost:5000/api/campaigns');
+      const data = await response.json();
+
+      const parsedCampaigns = data.map((campaign, i) => ({
+        owner: campaign.owner,
+        title: campaign.title,
+        description: campaign.description,
+        target: ethers.utils.formatEther(campaign.target.toString()),
+        deadline: Number(campaign.deadline),
+        amountCollected: ethers.utils.formatEther(campaign.amountCollected.toString()),
+        image: campaign.image,
+        pId: i,
+      }));
+
+      return parsedCampaigns;
+    } catch (error) {
+      console.error("Failed to fetch campaigns from backend:", error);
+      return [];
+    }
   };
+
 
   const donate = async (pId, amount) => {
     const tx = await contract.donateToCampaign(pId, {
