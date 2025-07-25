@@ -69,8 +69,8 @@ export const StateContextProvider = ({ children }) => {
 
   const getCampaigns = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/campaigns');
-      const data = await response.json();
+       const response = await fetch('https://crowdfunding-platform-3nbj.onrender.com/api/campaigns');
+    const data = await response.json();
 
       const parsedCampaigns = data.map((campaign, i) => ({
         owner: campaign.owner,
