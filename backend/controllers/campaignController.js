@@ -7,7 +7,19 @@ const contract = new ethers.Contract(process.env.CONTRACT_ADDRESS, CrowdFundingA
 exports.getAllCampaigns = async (req, res) => {
   try {
     const campaigns = await contract.getCampaigns();
-    res.status(200).json(campaigns);
+
+    const parsedCampaigns = campaigns.map((c, i) => ({
+      owner: c.owner,
+      title: c.title,
+      description: c.description,
+      target: c.target.toString(),            // BigInt → string
+      deadline: c.deadline.toString(),        // BigInt → string
+      amountCollected: c.amountCollected.toString(), // BigInt → string
+      image: c.image,
+      pId: i,
+    }));
+
+    res.status(200).json(parsedCampaigns);
   } catch (err) {
     console.error('Error fetching campaigns:', err);
     res.status(500).json({ error: 'Failed to fetch campaigns' });
