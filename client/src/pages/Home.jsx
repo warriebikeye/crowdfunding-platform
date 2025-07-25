@@ -17,8 +17,7 @@ const Home = () => {
   }
 
   useEffect(() => {
-    //if (contract) fetchCampaigns();
-    fetchCampaigns();
+    if (contract) fetchCampaigns();
   }, [address, contract]); 
 
   const filteredCampaigns = searchTerm

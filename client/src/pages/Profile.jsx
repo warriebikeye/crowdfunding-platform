@@ -7,7 +7,7 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
   const { state } = useLocation();
-  const { address, contract, getCampaigns } = useStateContext();
+  const { address, contract, getCampaigns, searchTerm } = useStateContext();
 
   const fetchCampaigns = async () => {
     setIsLoading(true);
@@ -21,11 +21,18 @@ const Profile = () => {
     if(contract) fetchCampaigns();
   }, [address, contract]);
 
+   const filteredCampaigns = searchTerm
+    ? ownerCampaigns.filter((c) =>
+      c.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.owner.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    : ownerCampaigns;
+
   return (
     <DisplayCampaigns 
       title="Your Campaigns"
       isLoading={isLoading}
-      campaigns={campaigns}
+      campaigns={filteredCampaigns}
     />
   )
 }
